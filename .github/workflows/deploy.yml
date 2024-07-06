@@ -1,0 +1,32 @@
+name: Deploy to Apache Server
+
+on:
+  push:
+    branches:
+      - main  # Adjust the branch name as needed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Use the latest version of Ubuntu
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+
+      - name: Add server to known_hosts
+        run: |
+          ssh-keyscan -H 3.16.42.94 >> ~/.ssh/known_hosts
+
+      - name: Copy PHP files to home directory
+        run: |
+          scp -r * ubuntu@3.16.42.94:/home/ubuntu/
+        working-directory: ${{ github.workspace }}
+
+      - name: Move files to Apache directory and restart Apache
+        run: |
+          ssh ubuntu@3.16.42.94 'sudo mv /home/ubuntu/* /var/www/html/ && sudo systemctl restart apache2'

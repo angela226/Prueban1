@@ -10,23 +10,23 @@ jobs:
     runs-on: ubuntu-latest  # Use the latest version of Ubuntu
 
     steps:
-      - name: Checkout repository
+      - name: Paso 01 Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up SSH
+      - name: Paso 02 Configuracion de SHH - Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
 
-      - name: Add server to known_hosts
+      - name: Paso 03 Agregar Servidor a lista de servidor conocidos - Add server to known_hosts
         run: |
-          ssh-keyscan -H 3.16.42.94 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 3.141.10.241 >> ~/.ssh/known_hosts
 
-      - name: Copy PHP files to home directory
+      - name: Paso 04 Copiar Archivos PHP al directorio home - Copy PHP files to home directory
         run: |
-          scp -r * ubuntu@3.16.42.94:/home/ubuntu/
+          scp -r * ubuntu@3.141.10.241:/home/ubuntu/
         working-directory: ${{ github.workspace }}
 
-      - name: Move files to Apache directory and restart Apache
+      - name: Paso 05 Mover Archivos al directorio de apache y reiniciar apache - Move files to Apache directory and restart Apache
         run: |
-          ssh ubuntu@3.16.42.94 'sudo mv /home/ubuntu/* /var/www/html/ && sudo systemctl restart apache2'
+          ssh ubuntu@3.141.10.241 'sudo mv /home/ubuntu/* /var/www/html/ && sudo systemctl restart apache2'

@@ -3,7 +3,7 @@ name: Deploy to Apache Server
 on:
   push:
     branches:
-      - main  # Adjust the branch name as needed
+      - main  # Ajustar el nombre de la rama remota como se necesite - Adjust the branch name as needed
 
 jobs:
   deploy:
@@ -20,13 +20,13 @@ jobs:
 
       - name: Paso 03 Agregar Servidor a lista de servidor conocidos - Add server to known_hosts
         run: |
-          ssh-keyscan -H 3.141.10.241 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 18.223.99.169 >> ~/.ssh/known_hosts
 
       - name: Paso 04 Copiar Archivos PHP al directorio home - Copy PHP files to home directory
         run: |
-          scp -r * ubuntu@3.141.10.241:/home/ubuntu/
+          scp -r * ubuntu@18.223.99.169:/home/ubuntu/
         working-directory: ${{ github.workspace }}
 
       - name: Paso 05 Mover Archivos al directorio de apache y reiniciar apache - Move files to Apache directory and restart Apache
         run: |
-          ssh ubuntu@3.141.10.241 'sudo mv /home/ubuntu/* /var/www/html/ && sudo systemctl restart apache2'
+          ssh ubuntu@18.223.99.169 'sudo mv /home/ubuntu/* /var/www/html/ && sudo systemctl restart apache2'
